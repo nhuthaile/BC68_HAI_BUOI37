@@ -1,9 +1,11 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { suaSinhVien, xoaSinhVien } from "../../redux/sinhvienSlice";
 
 const SinhVienTable = () => {
   const selector = useSelector((state) => state.sinhvienSlice.sinhVien);
-  console.log(selector);
+  // console.log(selector);
+  const dispatch = useDispatch();
   return (
     <div className="px-5">
       <table className="w-full mt-5 text-center ">
@@ -14,18 +16,26 @@ const SinhVienTable = () => {
           <td>Email</td>
           <td>Chỉnh Sửa</td>
         </thead>
-        {selector.map((val, key) => {
+        {selector.map((sinhvien, key) => {
           return (
             <tr key={key} className="border ">
-              <td>{val.maSinhVien}</td>
-              <td>{val.hoTen}</td>
-              <td>{val.phone}</td>
-              <td>{val.email}</td>
+              <td>{sinhvien.maSinhVien}</td>
+              <td>{sinhvien.hoTen}</td>
+              <td>{sinhvien.phone}</td>
+              <td>{sinhvien.email}</td>
               <td>
-                <button className="bg-red-500 text-white px-5 py-1 rounded-md mr-3">
+                <button
+                  onClick={() => {
+                    dispatch(xoaSinhVien(sinhvien.maSinhVien));
+                  }}
+                  className="bg-red-500 text-white px-5 py-1 rounded-md mr-3"
+                >
                   Xoá
                 </button>
-                <button className="bg-orange-500 text-white px-5 py-1 rounded-md">
+                <button
+                  onClick={() => dispatch(suaSinhVien(sinhvien))}
+                  className="bg-orange-500 text-white px-5 py-1 rounded-md"
+                >
                   Sửa
                 </button>
               </td>

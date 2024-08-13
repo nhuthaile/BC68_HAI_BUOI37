@@ -3,21 +3,29 @@ import InputCustom from "../InputCustom/InputCustom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { validationNoti } from "../../common/validationNoti";
-import { useDispatch } from "react-redux";
-import { themSinhVien } from "../../redux/sinhvienSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  capNhatSinhVien,
+  suaSinhVien,
+  themSinhVien,
+} from "../../redux/sinhvienSlice";
 
 const ThongTinSinhVien = () => {
   const dispatch = useDispatch();
+  const suaInfo = useSelector((state) => state.sinhvienSlice.suaSinhVien);
+  // console.log(suaInfo[0]);
 
   const formik = useFormik({
     initialValues: {
-      maSinhVien: "",
-      hoTen: "",
-      phone: "",
-      email: "",
+      maSinhVien: suaInfo[0] ? suaInfo[0].maSinhVien : "",
+      hoTen: suaInfo[0] ? suaInfo[0].hoTen : "",
+      phone: suaInfo[0] ? suaInfo[0].phone : "",
+      email: suaInfo[0] ? suaInfo[0].email : "",
     },
+    enableReinitialize: true,
     onSubmit: (values) => {
       dispatch(themSinhVien(values));
+      formik.resetForm();
     },
     validationSchema: yup.object({
       maSinhVien: yup.string().required(validationNoti.empty),
@@ -85,6 +93,12 @@ const ThongTinSinhVien = () => {
           className="bg-blue-500 text-white px-5 py-3 rounded-md mt-5"
         >
           Thêm Sinh Viên
+        </button>
+        <button
+          onClick={() => dispatch(capNhatSinhVien(formik.values))}
+          className="bg-green-500 ml-5 text-white px-5 py-3 rounded-md mt-5"
+        >
+          Cập Nhật Thông Tin
         </button>
       </form>
     </div>
